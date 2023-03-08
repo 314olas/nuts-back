@@ -1,7 +1,8 @@
 export default {
   type: "object",
-  properties: {
-    name: { type: 'string' }
-  },
-  required: ['name']
+  parameters: {
+    paths: {
+      id: true
+    }
+  }
 } as const;
