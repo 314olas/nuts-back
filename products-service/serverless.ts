@@ -2,6 +2,8 @@ import type { AWS } from '@serverless/typescript';
 
 import getAllProducts from '@functions/getAllProducts';
 import getProductById from '@functions/getProductById';
+import dynamoResouses from '@db/resourses';
+import createProduct from '@functions/createProduct';
 
 const serverlessConfiguration: AWS = {
   service: 'products-service',
@@ -15,13 +17,23 @@ const serverlessConfiguration: AWS = {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
+    httpApi: {
+      cors: {
+        allowedOrigins: ["*"],
+        allowedHeaders: ["Content-Type"],
+        allowedMethods: ["OPTIONS","POST","GET"],
+      },
+    },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      PRODUCTS_TABLE: 'productsTable',
+      PRODUCTS_STOCK_TABLE: 'productsStockTable',
+      ALLOW_ORIGIN: '*',
     },
   },
   // import the function via paths
-  functions: { getAllProducts, getProductById },
+  functions: { getAllProducts, getProductById, createProduct },
   package: { individually: true },
   custom: {
     esbuild: {
@@ -34,7 +46,13 @@ const serverlessConfiguration: AWS = {
       platform: 'node',
       concurrency: 10,
     },
+
   },
+  resources: {
+    Resources: {
+      ...dynamoResouses
+    }
+  }
 };
 
 module.exports = serverlessConfiguration;
