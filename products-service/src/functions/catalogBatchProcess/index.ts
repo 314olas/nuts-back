@@ -4,12 +4,10 @@ export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
-      s3: {
-        bucket: 'nuts-store-upload',
-        event: 's3:ObjectCreated:*',
-        rules:[{ prefix: 'uploaded/' }],
-        existing: true
-      }
+      sqs: {
+        arn: { "Fn::GetAtt": ["catalogItemsQueue", "Arn"] },
+        batchSize: 5
+      },
     },
   ],
 };
