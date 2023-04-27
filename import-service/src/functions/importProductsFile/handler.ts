@@ -10,11 +10,12 @@ const importProductsFile: ValidatedEventAPIGatewayProxyEvent<typeof schema> = as
 
   if (fileName) {
     try {
-      const s3 = new S3({region: process.env.REGION});
+      const s3 = new S3({region: process.env.REGION, signatureVersion: 'v4'});
 
-      const fileUrl = s3.getSignedUrl('putObject', {
+      const fileUrl = await s3.getSignedUrlPromise('putObject', {
         Bucket: process.env.BUCKET_NAME,
-        Key: `${process.env.BUCKET_PREFIX}${fileName}`
+        Key: `${process.env.BUCKET_PREFIX}/${fileName}`,
+        ContentType: 'text/csv'
       })
 
       return formatJSONResponse({
