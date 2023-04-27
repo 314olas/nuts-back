@@ -5,15 +5,15 @@ type ValidatedAPIGatewayProxyEvent<S> = Omit<APIGatewayProxyEvent, 'body'> & { b
 export type ValidatedEventAPIGatewayProxyEvent<S> = Handler<ValidatedAPIGatewayProxyEvent<S>, APIGatewayProxyResult>
 
 const headers = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token',
-  'Access-Control-Allow-Methods': 'OPTIONS,POST,GET'
-};
+  "Access-Control-Allow-Headers" : "Content-Type",
+  "Access-Control-Allow-Origin": process.env.ALLOW_ORIGIN,
+  "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+  "Content-Type": "application/json"
+}
 
-export const formatJSONResponse = (response: Record<string, unknown>, statusCode: number) => {
+export const formatJSONResponse = (response: any, statusCode: number) => {
   return {
     statusCode: statusCode,
-    headers,
     body: JSON.stringify(response)
   }
 }
